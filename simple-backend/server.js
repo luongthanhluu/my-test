@@ -164,6 +164,62 @@ app.delete('/api/list/:id', (req, res) => {
   return res.status(204).send();
 });
 
+app.put('/api/list', (req, res, next) => {
+  const listSchema = Joi.object().keys({
+    title: Joi.string().required(),
+    cardId: Joi.string().required(),
+  });
+  const { error: validationError } = Joi.validate(req.body, listSchema);
+  if (validationError) {
+    const err = new Error('Bad request');
+    err.status = 400;
+    return next(err);
+  }
+
+  for (let repo of REPOS) {
+    let fromList = null
+    let toList = null
+    let card = null
+
+    for (fromList of repo.lists) {
+      for (let item of fromList.cards) {
+        if (item.id === req.body.cardId) {
+          card = item
+          break
+        }
+      }
+      if (card) {
+        break
+      }
+    }
+    for (toList of repo.lists) {
+      if (toList.title === req.body.title) {
+        break
+      }
+    }
+
+    if (card) {
+      if(!card.activities) {
+        card.activities = []
+      }
+      const newActivity = {
+        createdAt: new Date(),
+        description: `moved from ${fromList.title} to ${toList.title}`
+      }
+      card.activities.push(newActivity)
+      toList.cards.push(card)
+    }
+    const index = fromList.cards.findIndex(
+      (item) => item.id === req.body.cardId
+    )
+    if (typeof index === 'number') {
+      fromList.cards.splice(index, 1)
+    }
+  }
+  
+  return res.status(204).send();
+});
+
 app.put('/api/list/:id', (req, res, next) => {
   const list = findList(req.params.id);
   if (!list) {
@@ -263,7 +319,8 @@ app.delete('/api/card/:id', (req, res) => {
 app.put('/api/card/:id', (req, res, next) => {
   const cardSchema = Joi.object().keys({
     text: Joi.string().required(),
-    id: Joi.string().required()
+    id: Joi.string().required(),
+    note: Joi.string(),
   });
   const { error: validationError } = Joi.validate(req.body, cardSchema);
   if (validationError) {
@@ -287,6 +344,7 @@ app.put('/api/card/:id', (req, res, next) => {
     return next(err);
   }
   card.text = req.body.text;
+  card.note = req.body.note;
   return res.status(204).send();
 });
 

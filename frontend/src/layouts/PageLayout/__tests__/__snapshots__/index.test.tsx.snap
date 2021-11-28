@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loading with false props 1`] = `
+<div>
+  <header
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionStatic css-hip9hq-MuiPaper-root-MuiAppBar-root"
+  >
+    <div
+      class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-dense css-10ltm04-MuiToolbar-root"
+    >
+      <div
+        class="MuiTypography-root MuiTypography-h6 css-1qp5wg9-MuiTypography-root"
+      >
+        title
+      </div>
+    </div>
+  </header>
+  <div
+    class="MuiContainer-root MuiContainer-maxWidthLg css-13kvln1-MuiContainer-root"
+  >
+    <div />
+  </div>
+</div>
+`;

@@ -1,0 +1,1 @@
+export { boardSlice } from './reducer'
