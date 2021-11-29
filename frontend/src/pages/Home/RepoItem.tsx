@@ -51,7 +51,9 @@ export const RepoItem: FC<ListItemProps> = ({
     }
 
     const onClickItem = () => {
-        navigate(`/repo/${item.id}`)
+        if (!isEdit) {
+            navigate(`/repo/${item.id}`)
+        }
     }
 
     const onSaveEdit = () => {
