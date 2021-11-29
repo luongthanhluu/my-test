@@ -295,7 +295,8 @@ app.post('/api/list/:id/card', (req, res, next) => {
     next(err);
   }
   const cardSchema = Joi.object().keys({
-    text: Joi.string().required()
+    text: Joi.string().required(),
+    note: Joi.string()
   });
   const { error: validationError } = Joi.validate(req.body, cardSchema);
   if (validationError) {
@@ -312,7 +313,7 @@ app.delete('/api/card/:id', (req, res) => {
   for (let repo of REPOS) {
     for (let list of repo.lists) {
       const cardIndex = list.cards.findIndex(card => card.id === req.params.id);
-      if (cardIndex) {
+      if (cardIndex > -1) {
         list.cards.splice(cardIndex, 1);
         break;
       }
