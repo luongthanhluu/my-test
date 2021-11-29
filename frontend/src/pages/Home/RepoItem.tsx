@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import {
     ListItemButton,
     ListItemText,
@@ -38,6 +38,18 @@ export const RepoItem: FC<ListItemProps> = ({
     const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value)
     }
+
+    const isEmptyRepo = useMemo(() => {
+        let isEmpty = true
+        if (!item.lists || !item.lists?.length) {
+            return isEmpty
+        }
+        const notEmpty = item.lists.find((item) => item.cards?.length > 0)
+        if (notEmpty) {
+            isEmpty = false
+        }
+        return isEmpty
+    }, [item.lists])
 
     const onCancelEdit = () => {
         if (!item.id) {
@@ -102,7 +114,7 @@ export const RepoItem: FC<ListItemProps> = ({
                 <IconButton onClick={toggleEdit}>
                     <EditIcon color="primary" />
                 </IconButton>
-                {!item.lists?.length && (
+                {isEmptyRepo && (
                     <IconButton onClick={onDeleteEdit}>
                         <DeleteIcon color="error" />
                     </IconButton>
