@@ -14,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+const StaticListTitle = ['Open', 'Confirmed', 'False Positive', 'Fixed']
 function makeRepo(name, lists = []) {
   return {
     name,
@@ -65,6 +66,10 @@ app.post('/api/repo', (req, res, next) => {
     return next(err);
   }
   const repo = makeRepo(req.body.name);
+  for( let index in StaticListTitle) {
+    const list = makeList(StaticListTitle[index])
+    repo.lists.push(list)
+  }
   REPOS.push(repo);
   return res.status(201).json(repo);
 });
